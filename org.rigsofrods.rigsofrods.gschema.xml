@@ -1,0 +1,552 @@
+<schemalist>
+
+  <schema id="org.rigsofrods.rigsofrods.network" path="/org/rigsofrods/rigsofrods/network/" gettext-domain="rigsofrods">
+
+    <key name="network-enable" type="b">
+      <default>false</default>
+      <summary>Enable network mode</summary>
+      <description>
+        This switches RoR into network mode.
+Be aware that many features are not available in network mode.
+For example, you not be able to leave your vehicle or hook objects.
+      </description>
+    </key>
+
+    <key name="nickname" type="s">
+      <default l10n="messages">'Anonymous'</default>
+      <summary>Nickname</summary>
+      <description>
+        Nickname used in multiplayer mode
+      </description>
+    </key>
+
+    <key name="server-name" type="s">
+      <default>'127.0.0.1'</default>
+      <summary>Server host name</summary>
+      <description></description>
+    </key>
+
+    <key name="server-port" type="s">
+      <default>'12333'</default>
+      <summary>Server port number</summary>
+      <description></description>
+    </key>
+
+    <key name="server-pass" type="s">
+      <default>''</default>
+      <summary>Server password</summary>
+      <description></description>
+    </key>
+
+  </schema>
+
+  <schema id="org.rigsofrods.rigsofrods.settings.graphics" path="/org/rigsofrods/rigsofrods/settings/graphics/" gettext-domain="rigsofrods">
+
+    <key name="texture-filtering-mode" type="s">
+      <choices>
+        <choice value='TFO_NONE'/>
+        <choice value='TFO_BILINEAR'/>
+        <choice value='TFO_TRILINEAR'/>
+        <choice value='TFO_ANISOTROPIC'/>
+      </choices>
+      <default>'TFO_NONE'</default>
+      <summary>Texture Filtering Mode</summary>
+      <description>
+        Most recent hardware can do Anisotropic filtering without significant slowdown.
+Use lower settings only on old or poor video chipsets.
+      </description>
+    </key>
+
+    <key name="sky-type" type="s">
+      <choices>
+        <choice value='SKY_SANDSTORM'/>
+        <choice value='SKY_CAELUM'/>
+      </choices>
+      <default>'SKY_SANDSTORM'</default>
+      <summary>Sky Type</summary>
+      <description>
+        Caelum sky is nice but quite slow unless you have a high-powered GPU.
+      </description>
+    </key>
+
+    <key name="shadow-type" type="s">
+      <choices>
+        <choice value="SHADOWS_NONE"/>
+        <choice value="SHADOWS_TEXTURE"/>
+        <choice value="SHADOWS_PSSM"/>
+      </choices>
+      <default>'SHADOWS_NONE'</default>
+      <summary>Shadows</summary>
+      <description>
+        Shadow technique to be used ingame.
+      </description>
+    </key>
+
+    <key name="shadow-optimizations" type="b">
+      <default>false</default>
+      <summary>Shadow Performance Optimizations</summary>
+      <description>
+        When turned on, it disables the vehicles shadow when driving in first person mode.
+      </description>
+    </key>
+
+    <key name="view-distance-limit-enabled" type="b">
+      <default>false</default>
+      <summary>View Distance Limit Enabled</summary>
+      <description>
+        Enable the view distance limit.
+      </description>
+    </key>
+
+    <key name="view-distance-limit" type="i">
+      <default>2500</default>
+      <range min='10' max='5000'/>
+      <summary>View Distance Limit</summary>
+      <description>
+        Determines how far you can see in meters.
+      </description>
+    </key>
+
+    <key name="water-type" type="s">
+      <choices>
+        <choice value='WATER_BASIC'/>
+        <choice value='WATER_REFLECT'/>
+        <choice value='WATER_FULL_SPEED'/>
+        <choice value='WATER_FULL_QUALITY'/>
+        <choice value='WATER_HYDRAX'/>
+      </choices>
+      <default>'WATER_BASIC'</default>
+      <summary>Water type</summary>
+      <description>
+        Water reflection is slower, and requires a good GPU. In speed optimized mode you may experience excessive camera shaking.
+      </description>
+    </key>
+
+    <key name="waves" type="b">
+      <default>false</default>
+      <summary>Waves</summary>
+      <description>
+        Enabling waves adds a lot of fun in boats, but can have a big performance impact on some specific hardwares.
+      </description>
+    </key>
+
+    <key name="vegetation-thickness" type="i">
+      <default>50</default>
+      <range min='1' max='100'/>
+      <summary>Vegetation Thickness</summary>
+      <description>
+        This determines how much grass and how many trees (and such objects) should get displayed.
+      </description>
+    </key>
+
+    <key name="mirrors" type="b">
+      <default>false</default>
+      <summary>Mirrors</summary>
+      <description>
+        Shows the rear view mirrors in 1st person view. May cause compatibility problems for very old video cards.
+      </description>
+    </key>
+
+    <key name="sunburn" type="b">
+      <default>false</default>
+      <summary>Sunburn</summary>
+      <description>
+        Adds a bluish blinding effect.
+      </description>
+    </key>
+
+    <key name="high-dynamic-range" type="b">
+      <default>false</default>
+      <summary>High Dynamic Range</summary>
+      <description>
+        Add a lightning effect that simulates the light sensitivity of the human eye.
+      </description>
+    </key>
+
+    <key name="motion-blur" type="b">
+      <default>false</default>
+      <summary>Motion Blur</summary>
+      <description>
+        Adds a motion blur effect.
+      </description>
+    </key>
+
+    <key name="skidmarks" type="b">
+      <default>false</default>
+      <summary>Skidmarks</summary>
+      <description>
+        Adds tire tracks to the ground.
+      </description>
+    </key>
+
+    <key name="env-map" type="b">
+      <default>false</default>
+      <summary>HQ reflections</summary>
+      <description>
+        Enables high quality reflective effects.
+      </description>
+    </key>
+
+    <key name="glow" type="b">
+      <default>false</default>
+      <summary>Glow</summary>
+      <description>
+        Adds a glow effect to lights.
+      </description>
+    </key>
+
+    <key name="depth-of-field" type="b">
+      <default>false</default>
+      <summary>Depth of Field</summary>
+      <description>
+        Adds a nice depth of field effect to the scene.
+      </description>
+    </key>
+
+    <key name="screenshot-format" type="s">
+      <choices>
+        <choice value='JPEG'/>
+        <choice value='PNG'/>
+      </choices>
+      <default>'JPEG'</default>
+      <summary>Screenshot format</summary>
+      <description>
+        Determines in which format screenshots will be saved.
+      </description>
+    </key>
+  </schema>
+
+  <schema id="org.rigsofrods.rigsofrods.settings.gameplay" path="/org/rigsofrods/rigsofrods/settings/gameplay/" gettext-domain="rigsofrods">
+    <key name="language" type="s">
+      <default>'LANG_DEFAULT'</default>
+      <summary>Language</summary>
+      <description>
+        This setting overrides the system's default language. You need to restart the configurator to apply the changes.
+      </description>
+    </key>
+
+    <key name="gearbox-mode" type="s">
+      <choices>
+        <choice value='AUTOMATIC'/>
+        <choice value='SEMIAUTO'/>
+        <choice value='MANUAL'/>
+        <choice value='MANUAL_STICK'/>
+        <choice value='MANUAL_RANGES'/>
+      </choices>
+      <default>'AUTOMATIC'</default>
+      <summary>Gearbox Mode</summary>
+      <description>
+        The default mode for the gearbox when a new vehicle is loaded.
+      </description>
+    </key>
+
+    <key name="fovext" type="i">
+      <default>60</default>
+      <range min='0' max='180'/>
+      <summary>FOV External</summary>
+    </key>
+
+    <key name="fovint" type="i">
+      <default>75</default>
+      <range min='0' max='180'/>
+      <summary>FOV External</summary>
+    </key>
+
+    <key name="extcam" type="b">
+      <default>false</default>
+      <summary>Disable Camera Pitching</summary>
+      <description>
+        If you dislike the pitching external vehicle camera, you can disable it here.
+      </description>
+    </key>
+
+    <key name="arcade-controls" type="b">
+      <default>false</default>
+      <summary>Arcade controls</summary>
+      <description>
+        Braking will switch into reverse gear and accelerate.
+      </description>
+    </key>
+
+    <key name="user-token" type="s">
+      <default>''</default>
+      <summary>User token</summary>
+      <description>
+        Your rigsofrods.com User Token.
+      </description>
+    </key>
+
+    <key name="creak-sound-disable" type="b">
+      <default>false</default>
+      <summary>Disable creak sound</summary>
+      <description>
+        You can disable the default creak sound by checking this box.
+      </description>
+    </key>
+  </schema>
+
+  <schema id="org.rigsofrods.rigsofrods.settings.advanced" path="/org/rigsofrods/rigsofrods/settings/advanced/" gettext-domain="rigsofrods">
+
+    <key name="audio-device" type="s">
+      <default>'AUDIO_DEFAULT'</default>
+      <summary>Audio device:</summary>
+      <description>
+        Select the appropriate sound source.
+Leaving to Default should work most of the time.
+      </description>
+    </key>
+
+    <key name="sound-volume" type="i">
+      <default>100</default>
+      <range min='0' max='100'/>
+      <summary>Sound volume</summary>
+      <description>
+        Sets the master volume
+      </description>
+    </key>
+
+    <key name="flares-mode" type="s">
+      <choices>
+        <choice value="none"/>
+        <choice value="no-light-sources"/>
+        <choice value="only-current"/>
+        <choice value="all-vehicles-main-lights"/>
+        <choice value="all-vehicles-all-lights"/>
+      </choices>
+      <summary>Light source effects</summary>
+      <default>'none'</default>
+      <description>
+        Determines which lights will project light on the environment.
+The more light sources are used, the slower it will be.
+      </description>
+    </key>
+
+    <key name="fps-limit-enabled" type="b">
+      <default>false</default>
+      <summary>Enable FPS Limit</summary>
+      <description>
+        Enables the frames per second limiter.
+      </description>
+    </key>
+
+    <key name="fps-limit" type="i">
+      <default>50</default>
+      <range min='10' max='200'/>
+      <summary>FPS Limit</summary>
+      <description>
+        Sets the maximum frames per second rate.
+      </description>
+    </key>
+
+    <key name="replay-mode" type="b">
+      <default>false</default>
+      <summary>Replay mode</summary>
+      <description>
+        Replay mode. This will affect your frame rate.
+      </description>
+    </key>
+
+    <key name="position-storage" type="b">
+      <default>false</default>
+      <summary>Enable position storage</summary>
+      <description>
+        Can be used for quick saving and loading of vehicle positions.
+      </description>
+    </key>
+
+    <key name="map-disabled" type="b">
+      <default>false</default>
+      <summary>Disable overview map</summary>
+      <description>
+        Disables the map. This is for testing purposes only, you should not gain any FPS with that.
+      </description>
+    </key>
+
+    <key name="multithreading-disabled" type="b">
+      <default>false</default>
+      <summary>Disable multithreading</summary>
+      <description>
+        Disables all separate physics threads (might be an option to avoid camera stuttering).
+      </description>
+    </key>
+
+    <key name="collisions-disabled" type="b">
+      <default>false</default>
+      <summary>Disable inter-vehicle collisions</summary>
+      <description>
+        Disables the collision detection between multiple trucks.
+      </description>
+    </key>
+
+    <key name="self-collisions-disabled" type="b">
+      <default>false</default>
+      <summary>Disable intra-vehicle collisions</summary>
+      <description>
+        Disables the collision detection within one truck (no self-collisions).
+      </description>
+    </key>
+
+  </schema>
+
+  <schema id="org.rigsofrods.rigsofrods.settings.debug" path="/org/rigsofrods/rigsofrods/settings/debug/" gettext-domain="rigsofrods">
+
+    <key name="ingame-console" type="b">
+      <default>false</default>
+      <summary>Ingame console</summary>
+      <description>
+        Enables the Scripting Console ingame. Use the ~ key.
+      </description>
+    </key>
+
+    <key name="developer-mode" type="b">
+      <default>false</default>
+      <summary>Developer mode</summary>
+      <description>
+        Unlocks disabled and unfinished features for development.
+      </description>
+    </key>
+
+    <key name="advanced-logging" type="b">
+      <default>false</default>
+      <summary>Advanced logging</summary>
+      <description>
+        Enables fancy HTML logs for loaded terrains, objects and trucks.
+      </description>
+    </key>
+
+    <key name="vehicle-mass-debug" type="b">
+      <default>false</default>
+      <summary>Debug vehicle mass</summary>
+      <description>
+        Prints all node masses to the RoR.log.
+      </description>
+    </key>
+
+    <key name="beam-breakage-debug" type="b">
+      <default>false</default>
+      <summary>Debug beam breakage</summary>
+      <description>
+        Logs the beam info to RoR.log whenever a beam breaks.
+      </description>
+    </key>
+
+    <key name="beam-deformation-debug" type="b">
+      <default>false</default>
+      <summary>Debug beam deformations</summary>
+      <description>
+        Logs the beam info to RoR.log whenever a beam deforms.
+      </description>
+    </key>
+
+    <key name="video-camera-debug" type="b">
+      <default>false</default>
+      <summary>Debug video cameras</summary>
+      <description>
+        Adds a virtuals camera mesh that should help you position the camera correctly.
+      </description>
+    </key>
+
+    <key name="env-map-debug" type="b">
+      <default>false</default>
+      <summary>Debug environment mapping / chrome</summary>
+      <description>
+        Displays an unwrapped cube on what is used to project the reflections on vehicles.
+      </description>
+    </key>
+
+    <key name="triggers-debug" type="b">
+      <default>false</default>
+      <summary>Debug triggers</summary>
+      <description>
+        Enables Trigger debug messages
+      </description>
+    </key>
+
+    <key name="collision-mesh-debug" type="b">
+      <default>false</default>
+      <summary>Debug collision meshes</summary>
+      <description>
+        Shows all collision meshes in red to be able to position them correctly.
+      </description>
+    </key>
+
+    <key name="depth-of-field-debug" type="b">
+      <default>false</default>
+      <summary>Debug depth of field</summary>
+      <description>
+        Shows the DOF debug display on the screen in order to identify DOF problems.
+      </description>
+    </key>
+
+    <key name="crash-reporting-disabled" type="b">
+      <default>false</default>
+      <summary>Disable crash reporting</summary>
+      <description>
+        Disables the crash handling system.
+      </description>
+    </key>
+
+    <key name="input-grabbing" type="s">
+      <choices>
+        <choice value='GRAB_ALL'/>
+        <choice value='GRAB_DYNAMICALLY'/>
+        <choice value='GRAB_NONE'/>
+      </choices>
+      <default>'GRAB_ALL'</default>
+      <summary>Input grabbing</summary>
+      <description>
+        Determines the input capture mode. All is the default, Dynamically is good for windowed mode.
+      </description>
+    </key>
+
+    <key name="map-preselect" type="s">
+      <default>''</default>
+      <summary>Preselected map</summary>
+      <description>
+        The terrain you want to load upon RoR startup. Might remove the startup selection menu.
+      </description>
+    </key>
+
+    <key name="vehicle-preselect" type="s">
+      <default>''</default>
+      <summary>Preselected vehicle</summary>
+      <description>
+        The vehicle you want to load upon RoR startup. Might remove the startup selection menu.
+      </description>
+    </key>
+
+  </schema>
+
+  <schema id="org.rigsofrods.rigsofrods.controls.force-feedback" path="/org/rigsofrods/rigsofrods/controls/force-feedback/" gettext-domain="rigsofrods">
+
+    <key name="force-feedback-enable" type="b">
+      <default>false</default>
+      <summary>Enable force feedback</summary>
+    </key>
+
+    <key name="force-all" type="i">
+      <default>50</default>
+      <range min='0' max='100'/>
+      <summary>Overall force level</summary>
+    </key>
+
+    <key name="feedback-steering" type="i">
+      <default>50</default>
+      <range min='0' max='100'/>
+      <summary>Steering feedback level</summary>
+    </key>
+
+    <key name="self-centering" type="i">
+      <default>50</default>
+      <range min='0' max='100'/>
+      <summary>Self-centering level</summary>
+    </key>
+
+    <key name="feedback-inertia" type="i">
+      <default>50</default>
+      <range min='0' max='100'/>
+      <summary>Inertia feedback level</summary>
+    </key>
+
+  </schema>
+</schemalist>

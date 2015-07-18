@@ -1,0 +1,32 @@
+= Rigs of Rods Configurator
+:gpl-uri: http://www.gnu.org/licenses/gpl.html
+
+:team-uri: https://github.com/RigsOfRods
+:game-uri: https://github.com/RigsOfRods/rigs-of-rods
+:skybon-profile: https://github.com/skybon
+
+
+:python-uri: https://python.org
+:pygobject-uri: https://wiki.gnome.org/action/show/Projects/PyGObject
+
+This is the Rigs of Rods configurator application. It allows for user-friendly set up of {game-uri}[Rigs of Rods] without launching the game itself.
+
+This program may be useful for fine-tuning intricate engine, network and debug features or if the game fails to launch.
+
+== Features
+* Interactive GUI for configuration and launching.
+* Advanced tuning of graphics engine settings.
+* Networking features incl. lobby and server list.
+* Debugging options for the main game.
+* Written in {python-uri}[Python], based on {pygobject-uri}[PyGObject set of libraries].
+
+== A note on ping
+RTT delay (_ping_) is included measurement and shown in server list. Note that ping is not implemented via RoRnet protocol but as ICMP `ping` (standard system ping tool).
+
+Some servers may restrict ICMP connections or otherwise block pinging attempts. Their delay time will be shown as `9999`. You may still connect to such servers though.
+
+== Authors
+The application was written by {skybon-profile}[Artem Vorotnikov] with assistance from the rest of {team-uri}[Rigs of Rods development team].
+
+== License
+Rigs of Rods configurator is licensed under the terms of {gpl-uri}[GNU General Public License v3] available in link:COPYING[COPYING] file.
