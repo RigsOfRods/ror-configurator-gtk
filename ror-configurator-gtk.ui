@@ -1956,6 +1956,7 @@ For example, you not be able to leave your vehicle or hook objects.</property>
                             <property name="visible">True</property>
                             <property name="can_focus">True</property>
                             <property name="tooltip_text" translatable="yes">Your network name. Maximum 20 Characters.</property>
+                            <property name="text" translatable="yes">Anonymous</property>
                           </object>
                           <packing>
                             <property name="left_attach">1</property>
@@ -2078,6 +2079,7 @@ Do not change it.</property>
                         <property name="vexpand">True</property>
                         <property name="model">ServerList_Store</property>
                         <property name="search_column">0</property>
+                        <signal name="row-activated" handler="cb_server_list_view_row_activated" object="treeview-selection" swapped="no"/>
                         <child internal-child="selection">
                           <object class="GtkTreeSelection" id="treeview-selection">
                             <signal name="changed" handler="cb_server_list_selection_changed" swapped="no"/>

@@ -49,10 +49,11 @@ class Callbacks:
 
     """Responses to events from GUI"""
 
-    def __init__(self, backend, user_settings_file, builder):
+    def __init__(self, backend, user_settings_file, builder, ror_path):
         self.backend = backend
         self.user_settings_file = user_settings_file
         self.builder = builder
+        self.ror_path = ror_path
 
     def cb_view_distance_limit_enabled_checkbutton_toggled(self, *args):
         """Toggles the status of view distance scale"""
@@ -87,9 +88,11 @@ class Callbacks:
 
     def cb_btn_play_clicked(self, *args):
         """Stores the configuration and starts the game."""
-        Settings.save(Settings)
+        settings = Settings(
+            self.backend, self.user_settings_file, self.builder)
+        settings.save()
         Gtk.main_quit()
-        start_game(ror_path)
+        start_game(self.ror_path)
 
     def cb_btn_save_and_exit_clicked(self, *args):
         """Stores the configuration and exits."""
@@ -116,50 +119,12 @@ class Callbacks:
         ping_column = Gtk.Builder.get_object(
             self.builder, "Ping_ServerList_TreeViewColumn")
 
-        listmodel.clear()
+        bool_ping = ping_button.get_active()
 
-        def pinging_target():
-            """Separate thread inside pinging callback"""
-            listing = server_stat.stat_master(
-                server_stat.MASTER_URL, ping_button.get_active())
+        Gtk.TreeViewColumn.set_visible(
+            ping_column, bool_ping)
 
-            Gtk.TreeViewColumn.set_visible(
-                ping_column, ping_button.get_active())
-            # Goodies for GUI
-            for i in range(len(listing)):
-                # Lock icon
-                if listing[i][server_stat.MASTER_PASS_COLUMN[-1] - 1] == True:
-                    listing[i].append("network-wireless-encrypted-symbolic")
-                else:
-                    listing[i].append(None)
-
-                # Country flags
-                if GEOIP_ENABLED == True:
-                    host = listing[i][
-                        server_stat.MASTER_HOST_COLUMN[-1] - 1].split(':')[0]
-                    try:
-                        country_code = pygeoip.GeoIP(
-                            GEOIP_DATA).country_code_by_addr(host)
-                    except OSError:
-                        country_code = pygeoip.GeoIP(
-                            GEOIP_DATA).country_code_by_name(host)
-                    except:
-                        country_code = 'unknown'
-                else:
-                    country_code = 'unknown'
-                listing[i].append(GdkPixbuf.Pixbuf.new_from_file_at_size(
-                    os.path.dirname(__file__) + '/icons/flags/' + country_code.lower() +
-                    '.svg', 24, 18))
-
-                # Total / max players
-                listing[i].append(str(listing[i][server_stat.MASTER_PLAYERCOUNT_COLUMN[-1] - 1]) +
-                                  '/' + str(listing[i][server_stat.MASTER_PLAYERLIMIT_COLUMN[-1] - 1]))
-
-                treeiter = listmodel.append(listing[i])
-
-        pinging_thread = threading.Thread(target=pinging_target)
-        pinging_thread.daemon = True
-        pinging_thread.start()
+        App.update_server_list(listmodel, bool_ping)
 
     def cb_server_list_selection_changed(self, widget, *data):
         """Updates text in Entry on TreeView selection change."""
@@ -176,6 +141,11 @@ class Callbacks:
                 Gtk.Entry.set_text(entry, text)
             except TypeError:
                 pass
+
+    def cb_server_list_view_row_activated(self, widget, path, column, *data):
+        """Launches the game"""
+        self.cb_server_list_selection_changed(widget)
+        self.cb_btn_play_clicked()
 
 
 class Settings:
@@ -301,6 +271,7 @@ def start_game(path):
 
     try:
         call(os.path.join(path, "RoR"))
+        return 0
     except OSError:
         print("Error launching the game.")
 
@@ -312,6 +283,52 @@ class App:
     def __init__(self):
         self.builder = Gtk.Builder()
         Gtk.Builder.add_from_file(self.builder, UI_PATH)
+
+    @staticmethod
+    def update_server_list(listmodel, bool_ping):
+        """Updates server lists"""
+        listmodel.clear()
+
+        def pinging_target(listmodel, bool_ping):
+            """Separate thread inside pinging callback"""
+            listing = server_stat.stat_master(
+                server_stat.MASTER_URL, bool_ping)
+
+            # Goodies for GUI
+            for i in range(len(listing)):
+                # Lock icon
+                if listing[i][server_stat.MASTER_PASS_COLUMN[-1] - 1] == True:
+                    listing[i].append("network-wireless-encrypted-symbolic")
+                else:
+                    listing[i].append(None)
+
+                # Country flags
+                if GEOIP_ENABLED == True:
+                    host = listing[i][
+                        server_stat.MASTER_HOST_COLUMN[-1] - 1].split(':')[0]
+                    try:
+                        country_code = pygeoip.GeoIP(
+                            GEOIP_DATA).country_code_by_addr(host)
+                    except OSError:
+                        country_code = pygeoip.GeoIP(
+                            GEOIP_DATA).country_code_by_name(host)
+                    except:
+                        country_code = 'unknown'
+                else:
+                    country_code = 'unknown'
+                listing[i].append(GdkPixbuf.Pixbuf.new_from_file_at_size(
+                    os.path.dirname(__file__) + '/icons/flags/' + country_code.lower() +
+                    '.svg', 24, 18))
+
+                # Total / max players
+                listing[i].append(str(listing[i][server_stat.MASTER_PLAYERCOUNT_COLUMN[-1] - 1]) +
+                                  '/' + str(listing[i][server_stat.MASTER_PLAYERLIMIT_COLUMN[-1] - 1]))
+
+                treeiter = listmodel.append(listing[i])
+
+        pinging_thread = threading.Thread(target=pinging_target, args=(listmodel, bool_ping))
+        pinging_thread.daemon = True
+        pinging_thread.start()
 
     def main(self):
         """Main function.
@@ -344,7 +361,7 @@ class App:
                                                cmd_parser.parse_args().config_file)
 
         callbacks = Callbacks(
-            self.backend, self.user_settings_file, self.builder)
+            self.backend, self.user_settings_file, self.builder, self.ror_path)
         Gtk.Builder.connect_signals(self.builder, callbacks)
 
         Gtk.Window.show_all(
