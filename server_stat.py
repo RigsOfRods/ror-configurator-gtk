@@ -22,7 +22,7 @@ import requests
 
 import ping
 
-ROR_NET='RoRnet_2.37'
+ROR_NET = 'RoRnet_2.37'
 MASTER_URL = 'http://api.rigsofrods.com/serverlist/?version=' + ROR_NET
 FORMAT = (["<table border='1'><tr><td><b>Players</b></td><td><b>Type</b></td><td><b>Name</b></td><td><b>Terrain</b></td></tr>", ""],
           ["rorserver://", ""],
@@ -48,6 +48,7 @@ class ServerListParser(HTMLParser):
     list1 = []
     list2 = []
     parser_mode = 0
+
     def handle_data(self, data):
         """Normal data handler"""
         if self.parser_mode == 0:
@@ -62,6 +63,7 @@ class ServerListParser(HTMLParser):
         """Extracts host link from cell"""
         if tag == "a":
             self.list1.append(value[0][1].replace("/", ""))
+
 
 def format_server_tuple(array, entry_length, player_column, pass_column):
     """Splits player column into total and max players.
@@ -97,23 +99,23 @@ def list_to_table(array, width):
             i = 0
     return array2
 
+
 def append_rtt_info(array, host_column, bool_ping):
     """Appends server response time to the table. If bool_ping is set to false, print 9999 instead."""
-    hosts_array=[]
-    rtt_temp_array=[]
+    hosts_array = []
+    rtt_temp_array = []
     rtt_temp_array.append([])
-    rtt_array=[]
+    rtt_array = []
     rtt_array.append([])
 
     for i in range(len(array)):
         hosts_array.append(array[i][host_column].split(':')[0])
 
-
     pinger = ping.Pinger()
     pinger.thread_count = 16
     pinger.hosts = hosts_array
 
-    if bool_ping == True:
+    if bool_ping is True:
         pinger.status.clear()
         rtt_temp_array = pinger.start()
 
@@ -131,6 +133,7 @@ def append_rtt_info(array, host_column, bool_ping):
             array[i].append(9999)
 
     return
+
 
 def stat_master(url, bool_rtt):
     """Stats the master server"""

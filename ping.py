@@ -4,9 +4,10 @@ import subprocess
 import sys
 import threading
 
+
 class Pinger(object):
-    status = [] # Populated while we are running
-    hosts = [] # List of all hosts/ips in our input queue
+    status = []  # Populated while we are running
+    hosts = []  # List of all hosts/ips in our input queue
 
     # How many ping process at the time.
     thread_count = 100
@@ -36,12 +37,12 @@ class Pinger(object):
     def pop_queue(self):
         ip = None
 
-        self.lock.acquire() # Grab or wait+grab the lock.
+        self.lock.acquire()  # Grab or wait+grab the lock.
 
         if self.hosts:
             ip = self.hosts.pop()
 
-        self.lock.release() # Release the lock, so another thread could grab it.
+        self.lock.release()  # Release the lock, so another thread could grab it.
 
         return ip
 
@@ -69,6 +70,6 @@ class Pinger(object):
             threads.append(t)
 
         # Wait until all the threads are done. .join() is blocking.
-        [ t.join() for t in threads ]
+        [t.join() for t in threads]
 
         return self.status

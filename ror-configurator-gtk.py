@@ -44,15 +44,20 @@ import server_stat
 APP_CONFIG = os.path.join(os.path.dirname(__file__), "ror-configurator.ini")
 UI_PATH = os.path.join(os.path.dirname(__file__), "ror-configurator-gtk.ui")
 
+
 class Callbacks:
+
     """Responses to events from GUI"""
+
     def __init__(self, backend, user_settings_file, builder):
         self.backend = backend
         self.user_settings_file = user_settings_file
         self.builder = builder
+
     def cb_view_distance_limit_enabled_checkbutton_toggled(self, *args):
         """Toggles the status of view distance scale"""
-        checkbutton = Gtk.Builder.get_object(self.builder, "ViewDistanceLimitEnabled_CheckButton")
+        checkbutton = Gtk.Builder.get_object(
+            self.builder, "ViewDistanceLimitEnabled_CheckButton")
         scale = Gtk.Builder.get_object(self.builder, "ViewDistanceLimit_Scale")
 
         if Gtk.ToggleButton.get_active(checkbutton) == True:
@@ -62,7 +67,8 @@ class Callbacks:
 
     def cb_fps_limit_enabled_checkbutton_toggled(self, *args):
         """Toggles the status of FPS limit scale"""
-        checkbutton = Gtk.Builder.get_object(self.builder, "FpsLimitEnabled_CheckButton")
+        checkbutton = Gtk.Builder.get_object(
+            self.builder, "FpsLimitEnabled_CheckButton")
         scale = Gtk.Builder.get_object(self.builder, "FpsLimit_Scale")
 
         if Gtk.ToggleButton.get_active(checkbutton) == True:
@@ -87,7 +93,8 @@ class Callbacks:
 
     def cb_btn_save_and_exit_clicked(self, *args):
         """Stores the configuration and exits."""
-        settings = Settings(self.backend, self.user_settings_file, self.builder)
+        settings = Settings(
+            self.backend, self.user_settings_file, self.builder)
         settings.save()
         Gtk.main_quit()
 
@@ -172,9 +179,11 @@ class Callbacks:
 
 
 class Settings:
+
     """Settings main class.
     Contains methods for saving and loading user settings and setting lists.
     """
+
     def __init__(self, backend, user_settings_file, builder):
         """Loads base variables into the class."""
         self.schema_base_id = 'org.rigsofrods.rigsofrods'
@@ -185,22 +194,23 @@ class Settings:
         self.backend = backend
         self.user_settings_file = user_settings_file
         self.builder = builder
-        
+
         if self.backend == "gkeyfile":
             self.keyfile = GLib.KeyFile.new()
 
-            self.keyfile.load_from_file(self.user_settings_file, GLib.KeyFileFlags.NONE)
+            self.keyfile.load_from_file(
+                self.user_settings_file, GLib.KeyFileFlags.NONE)
 
     def get_groups(self):
         """Compile a list of available settings groups."""
         mapping_cat = []
         for i in range(self.keyfile_config.get_groups()[1]):
             if (GLib.KeyFile.get_value(self.keyfile_config,
-                    GLib.KeyFile.get_groups(self.keyfile_config)[0][i], "group")
+                                       GLib.KeyFile.get_groups(self.keyfile_config)[0][i], "group")
                     in mapping_cat) == False:
 
                 mapping_cat.append(GLib.KeyFile.get_value(self.keyfile_config,
-                    GLib.KeyFile.get_groups(self.keyfile_config)[0][i], "group"))
+                                                          GLib.KeyFile.get_groups(self.keyfile_config)[0][i], "group"))
         return mapping_cat
 
     def load(self):
@@ -294,11 +304,15 @@ def start_game(path):
     except OSError:
         print("Error launching the game.")
 
+
 class App:
+
     """App class."""
+
     def __init__(self):
         self.builder = Gtk.Builder()
         Gtk.Builder.add_from_file(self.builder, UI_PATH)
+
     def main(self):
         """Main function.
         Loads the GtkBuilder resources, settings and start the main loop.
@@ -327,17 +341,19 @@ class App:
         self.backend = cmd_parser.parse_args().backend
         self.ror_path = cmd_parser.parse_args().ror_path
         self.user_settings_file = os.path.join(cmd_parser.parse_args().profile_path, "config",
-            cmd_parser.parse_args().config_file)
+                                               cmd_parser.parse_args().config_file)
 
-        callbacks = Callbacks(self.backend, self.user_settings_file, self.builder)
+        callbacks = Callbacks(
+            self.backend, self.user_settings_file, self.builder)
         Gtk.Builder.connect_signals(self.builder, callbacks)
 
-        Gtk.Window.show_all(Gtk.Builder.get_object(self.builder, "Configurator_Window"))
+        Gtk.Window.show_all(
+            Gtk.Builder.get_object(self.builder, "Configurator_Window"))
 
-        settings = Settings(self.backend, self.user_settings_file, self.builder)
+        settings = Settings(
+            self.backend, self.user_settings_file, self.builder)
         settings.load()
         callbacks.cb_set_widget_sensitivity()
-
 
 if __name__ == "__main__":
     app = App()
