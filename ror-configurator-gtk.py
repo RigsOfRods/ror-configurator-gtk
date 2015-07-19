@@ -21,6 +21,7 @@
 import argparse
 import ast
 import os
+import threading
 
 from gi.repository import GdkPixbuf, Gtk, Gio, GLib
 
@@ -101,41 +102,57 @@ class Callbacks:
         """Exits the program."""
         Gtk.main_quit()
 
-    @classmethod
-    def cb_server_update_button_clicked(cls, listmodel, *data):
+    def cb_server_update_button_clicked(self, listmodel, *data):
         """Refills the server list model"""
-        ping_button = Gtk.Builder.get_object(App.builder, "PingingEnable_CheckButton")
-        ping_column = Gtk.Builder.get_object(App.builder, "Ping_ServerList_TreeViewColumn")
+        ping_button = Gtk.Builder.get_object(
+            self.builder, "PingingEnable_CheckButton")
+        ping_column = Gtk.Builder.get_object(
+            self.builder, "Ping_ServerList_TreeViewColumn")
 
         listmodel.clear()
 
-        listing = server_stat.stat_master(server_stat.MASTER_URL, ping_button.get_active())
-        Gtk.TreeViewColumn.set_visible(ping_column, ping_button.get_active())
-        # Goodies for GUI
-        for i in range(len(listing)):
-            # Lock icon
-            if listing[i][server_stat.MASTER_PASS_COLUMN[-1] - 1] == True:
-                listing[i].append("network-wireless-encrypted-symbolic")
-            else:
-                listing[i].append(None)
+        def pinging_target():
+            """Separate thread inside pinging callback"""
+            listing = server_stat.stat_master(
+                server_stat.MASTER_URL, ping_button.get_active())
 
-            # Country flags
-            if GEOIP_ENABLED == True:
-                host = listing[i][server_stat.MASTER_HOST_COLUMN[-1] - 1].split(':')[0]
-                try:
-                    country_code = pygeoip.GeoIP(GEOIP_DATA).country_code_by_addr(host)
-                except OSError:
-                    country_code = pygeoip.GeoIP(GEOIP_DATA).country_code_by_name(host)
-                except:
+            Gtk.TreeViewColumn.set_visible(
+                ping_column, ping_button.get_active())
+            # Goodies for GUI
+            for i in range(len(listing)):
+                # Lock icon
+                if listing[i][server_stat.MASTER_PASS_COLUMN[-1] - 1] == True:
+                    listing[i].append("network-wireless-encrypted-symbolic")
+                else:
+                    listing[i].append(None)
+
+                # Country flags
+                if GEOIP_ENABLED == True:
+                    host = listing[i][
+                        server_stat.MASTER_HOST_COLUMN[-1] - 1].split(':')[0]
+                    try:
+                        country_code = pygeoip.GeoIP(
+                            GEOIP_DATA).country_code_by_addr(host)
+                    except OSError:
+                        country_code = pygeoip.GeoIP(
+                            GEOIP_DATA).country_code_by_name(host)
+                    except:
+                        country_code = 'unknown'
+                else:
                     country_code = 'unknown'
-            else:
-                country_code = 'unknown'
-            listing[i].append(GdkPixbuf.Pixbuf.new_from_file_at_size(os.path.dirname(__file__)+'/icons/flags/' + country_code.lower() + '.svg', 24, 18))
+                listing[i].append(GdkPixbuf.Pixbuf.new_from_file_at_size(
+                    os.path.dirname(__file__) + '/icons/flags/' + country_code.lower() +
+                    '.svg', 24, 18))
 
-            # Total / max players
-            listing[i].append(str(listing[i][server_stat.MASTER_PLAYERCOUNT_COLUMN[-1] - 1]) + '/' + str(listing[i][server_stat.MASTER_PLAYERLIMIT_COLUMN[-1] - 1]))
+                # Total / max players
+                listing[i].append(str(listing[i][server_stat.MASTER_PLAYERCOUNT_COLUMN[-1] - 1]) +
+                                  '/' + str(listing[i][server_stat.MASTER_PLAYERLIMIT_COLUMN[-1] - 1]))
 
-            treeiter = listmodel.append(listing[i])
+                treeiter = listmodel.append(listing[i])
+
+        pinging_thread = threading.Thread(target=pinging_target)
+        pinging_thread.daemon = True
+        pinging_thread.start()
 
     def cb_server_list_selection_changed(self, widget, *data):
         """Updates text in Entry on TreeView selection change."""
